@@ -5,9 +5,12 @@ import {
   Collection,
   Events,
   Interaction,
+  Message,
   REST,
   Routes,
-  Snowflake
+  Snowflake,
+  EmbedBuilder,
+  TextChannel
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
@@ -39,8 +42,38 @@ export class Bot {
     this.client.on("error", console.error);
 
     this.onInteractionCreate();
+    this.messageCreate();
   }
+  private async messageCreate(){
+    this.client.on(Events.MessageCreate, async (message: Message<boolean>) => {
+      const channelIdToDelete = '1183351533098770453'; // Replace with the source channel ID
+      const channelIdToNotify = '1183344141208391780'; // Replace with the target channel ID
+      if (message.channel.id === channelIdToDelete && message.attachments.size > 0) {
+        // If a message with an attachment is sent in the source channel, delete it
+        await message.delete();
+    
+        // Send a message mentioning the author in the target channel
+        const targetChannel = this.client.channels.cache.get(channelIdToNotify);
+        if (targetChannel) {
+            const userAvatarURL = message.author.displayAvatarURL();
+            const attachmentURL = message.attachments.first()!.url;
+            const embed = new EmbedBuilder()
+              .setTitle(`Image sent by ${message.author.tag}`)
+              .setDescription(`Sent in ${message.channel}`)
+              .setImage(attachmentURL)
+              .setThumbnail(userAvatarURL)
+              .setColor('#ff99ff');
+              
+            (targetChannel as TextChannel).send({ embeds: [embed] });
+            (targetChannel as TextChannel).send(`${message.author}`);
+            (targetChannel as TextChannel).send(`====================================================`);
+          }
+        }
+    });
+    const escapeRegex = (str:any) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const cooldowns = new Collection();
 
+  }
   private async registerSlashCommands() {
     const rest = new REST({ version: "9" }).setToken(config.TOKEN);
 
