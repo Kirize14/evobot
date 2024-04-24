@@ -84,7 +84,7 @@ export default {
           .slice(0, 4095)
       )
       .setURL(playlist.data.url!)
-      .setColor("#F8AA2A")
+      .setColor("#FF99FF")
       .setTimestamp();
 
     if (interaction.replied)

@@ -115,7 +115,7 @@ function generateQueueEmbed(interaction: CommandInteraction, songs: Song[]) {
     const embed = new EmbedBuilder()
       .setTitle(i18n.__("queue.embedTitle"))
       .setThumbnail(interaction.guild?.iconURL()!)
-      .setColor("#F8AA2A")
+      .setColor("#FF99FF")
       .setDescription(i18n.__mf("queue.embedCurrentSong", { title: songs[0].title, url: songs[0].url, info: info }))
       .setTimestamp();
     embeds.push(embed);
