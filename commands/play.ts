@@ -10,7 +10,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("play")
     .setDescription(i18n.__("play.description"))
-    .addStringOption((option) => option.setName("song").setDescription("The song you want to play").setRequired(true)),
+    .addStringOption((option) => option.setName("song").setDescription("เล่นเพลงจาก Youtube หรือ Soundcloud").setRequired(true)),
   cooldown: 3,
   permissions: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak],
   async execute(interaction: ChatInputCommandInteraction, input: string) {
@@ -40,8 +40,8 @@ export default {
 
     const url = argSongName;
 
-    if (interaction.replied) await interaction.editReply("⏳ Loading...").catch(console.error);
-    else await interaction.reply("⏳ Loading...");
+    if (interaction.replied) await interaction.editReply("⏳ กำลังโหลด...").catch(console.error);
+    else await interaction.reply("⏳ กำลังโหลด...");
 
     // Start the playlist if playlist url was provided
     if (playlistPattern.test(url)) {
