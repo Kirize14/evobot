@@ -25,7 +25,7 @@ export default {
 
     const search = query;
 
-    await interaction.reply("⏳ Loading...").catch(console.error);
+    await interaction.reply("⏳ กำลังโหลด...").catch(console.error);
 
     let results: Video[] = [];
 
@@ -52,14 +52,14 @@ export default {
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
       new StringSelectMenuBuilder()
         .setCustomId("search-select")
-        .setPlaceholder("Nothing selected")
+        .setPlaceholder("ยังไม่มีเพลงที่เลือก")
         .setMinValues(1)
         .setMaxValues(10)
         .addOptions(options)
     );
 
     const followUp = await interaction.followUp({
-      content: "Choose songs to play",
+      content: "เลือกเพลงที่ต้องการจะเล่น",
       components: [row]
     });
 
@@ -70,7 +70,7 @@ export default {
       .then((selectInteraction) => {
         if (!(selectInteraction instanceof StringSelectMenuInteraction)) return;
 
-        selectInteraction.update({ content: "⏳ Loading the selected songs...", components: [] });
+        selectInteraction.update({ content: "⏳ กำลังโหลดเพลงที่เลือก...", components: [] });
 
         bot.slashCommandsMap
           .get("play")!
