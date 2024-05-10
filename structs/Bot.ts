@@ -61,23 +61,29 @@ export class Bot {
         if (targetChannel) {
             const userAvatarURL = message.author.displayAvatarURL();
             const attachmentURL = message.attachments.first()!.url;
+            
+            //Convert File to jpeg
             const response = await axios.get(attachmentURL, {
               responseType: 'arraybuffer'
-          });
-          const convertedImage: Buffer = await sharp(response.data).jpeg().toBuffer();
-          const outputFileName: string = `converted-${Date.now()}.jpg`;
-          const outputPath: string = path.join("/var/www/html/discordPic/", outputFileName);
-          fs.writeFileSync(outputPath, convertedImage);
-          console.log(`Saved converted image as ${outputFileName}`);
+            });
+            const convertedImage: Buffer = await sharp(response.data).jpeg().toBuffer();
+            const outputFileName: string = `converted-${Date.now()}.jpg`;
+            const outputPath: string = path.join("/var/www/html/discordPic/", outputFileName);
+            fs.writeFileSync(outputPath, convertedImage);
+            console.log(`Saved converted image as ${outputFileName}`);
+
+            //Fuck embed you useless piece of shit
+            /*
             const embed = new EmbedBuilder()
               .setTitle(`Image sent by ${message.author.tag}`)
               .setDescription(`Sent in ${message.channel}`)
               .setImage(attachmentURL)
               .setThumbnail(userAvatarURL)
               .setColor('#ff99ff');
-            (targetChannel as TextChannel).send({ embeds: [embed] });
-            (targetChannel as TextChannel).send(`${message.author}`);
-            (targetChannel as TextChannel).send(`====================================================`);
+            (targetChannel as TextChannel).send({ embeds: [embed] });*/
+            let messageToSend = `${message.author}\nhttp://103.82.249.58/discordPic/${outputFileName}`;
+            (targetChannel as TextChannel).send(`${messageToSend}`);
+            (targetChannel as TextChannel).send(`\`\`\`───────────────────────────────────────────────────────────────────────────────────────────\`\`\``);
           }
         }
     });
