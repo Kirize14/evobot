@@ -13,13 +13,17 @@ import {
   TextChannel
 } from "discord.js";
 import { readdirSync } from "fs";
-import { join } from "path";
+import path from "path";
 import { Command } from "../interfaces/Command";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
 import { MusicQueue } from "./MusicQueue";
+import axios from 'axios';
+import sharp from 'sharp';
+import fs from 'fs';
+
 
 export class Bot {
   public readonly prefix = "/";
@@ -57,13 +61,20 @@ export class Bot {
         if (targetChannel) {
             const userAvatarURL = message.author.displayAvatarURL();
             const attachmentURL = message.attachments.first()!.url;
+            const response = await axios.get(attachmentURL, {
+              responseType: 'arraybuffer'
+          });
+          const convertedImage: Buffer = await sharp(response.data).jpeg().toBuffer();
+          const outputFileName: string = `converted-${Date.now()}.jpg`;
+          const outputPath: string = path.join("/var/www/html/discordPic/", outputFileName);
+          fs.writeFileSync(outputPath, convertedImage);
+          console.log(`Saved converted image as ${outputFileName}`);
             const embed = new EmbedBuilder()
               .setTitle(`Image sent by ${message.author.tag}`)
               .setDescription(`Sent in ${message.channel}`)
               .setImage(attachmentURL)
               .setThumbnail(userAvatarURL)
               .setColor('#ff99ff');
-              
             (targetChannel as TextChannel).send({ embeds: [embed] });
             (targetChannel as TextChannel).send(`${message.author}`);
             (targetChannel as TextChannel).send(`====================================================`);
@@ -77,10 +88,10 @@ export class Bot {
   private async registerSlashCommands() {
     const rest = new REST({ version: "9" }).setToken(config.TOKEN);
 
-    const commandFiles = readdirSync(join(__dirname, "..", "commands")).filter((file) => !file.endsWith(".map"));
+    const commandFiles = readdirSync(path.join(__dirname, "..", "commands")).filter((file) => !file.endsWith(".map"));
 
     for (const file of commandFiles) {
-      const command = await import(join(__dirname, "..", "commands", `${file}`));
+      const command = await import(path.join(__dirname, "..", "commands", `${file}`));
 
       this.slashCommands.push(command.default.data);
       this.slashCommandsMap.set(command.default.data.name, command.default);

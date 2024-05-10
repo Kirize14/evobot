@@ -29,6 +29,7 @@
     "lyrics-finder": "^21.0.5",
     "os": "^0.1.2",
     "play-dl": "^1.9.7",
+    "sharp": "^0.33.3",
     "soundcloud-downloader": "^0.2.3",
     "string-progressbar": "^1.0.4",
     "youtube-sr": "~4.3.0"
