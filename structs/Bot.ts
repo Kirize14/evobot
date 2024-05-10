@@ -81,9 +81,9 @@ export class Bot {
               .setThumbnail(userAvatarURL)
               .setColor('#ff99ff');
             (targetChannel as TextChannel).send({ embeds: [embed] });*/
-            let messageToSend = `${message.author}\nhttp://103.82.249.58/discordPic/${outputFileName}`;
+            let messageToSend = `<@&655829722567278613>\n${message.author}\nhttp://103.82.249.58/discordPic/${outputFileName}`;
             (targetChannel as TextChannel).send(`${messageToSend}`);
-            (targetChannel as TextChannel).send(`\`\`\`───────────────────────────────────────────────────────────────────────────────────────────\`\`\``);
+            (targetChannel as TextChannel).send(`\`\`\`=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=\`\`\``);
           }
         }
     });
